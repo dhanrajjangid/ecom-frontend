@@ -10,14 +10,14 @@ import {
   MenuItem,
   Box,
   useMediaQuery,
-  InputBase,
   Drawer
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../context/AuthContext';
-import { FaBars, FaHome, FaHeart, FaSearch, FaUserCircle, FaShoppingCart } from 'react-icons/fa'; // react-icons
-import { BiCategoryAlt } from 'react-icons/bi'; // Category icon import
+import { FaBars, FaHome, FaHeart, FaUserCircle, FaShoppingCart } from 'react-icons/fa';
+import { BiCategoryAlt } from 'react-icons/bi';
+import SearchBar from './SearchBar';
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -25,32 +25,17 @@ const Navbar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-
   const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    // Add search logic or redirection for search results here
-    console.log("Search query:", searchQuery);
-  };
-
-  const renderMenuItems = () => {
-   
-    return (
-      <>
-        <MenuItem component={Link} to="/login" onClick={handleMenuClose}>Login</MenuItem>
-        <MenuItem component={Link} to="/signup" onClick={handleMenuClose}>Signup</MenuItem>
-      </>
-    );
-  };
+  const renderMenuItems = () => (
+    <>
+      <MenuItem component={Link} to="/login" onClick={handleMenuClose}>Login</MenuItem>
+      <MenuItem component={Link} to="/signup" onClick={handleMenuClose}>Signup</MenuItem>
+    </>
+  );
 
   return (
     <AppBar
@@ -60,7 +45,8 @@ const Navbar = () => {
         boxShadow: 'none',
         backgroundColor: '#fff',
       }}
-    >      <Toolbar>
+    >
+      <Toolbar>
         <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography
             variant="h6"
@@ -117,7 +103,7 @@ const Navbar = () => {
               </Drawer>
             </>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Button component={Link} to="/" startIcon={<FaHome />} sx={{ color: 'inherit' }}>
                 Home
               </Button>
@@ -127,6 +113,8 @@ const Navbar = () => {
               <Button component={Link} to="/wishlist" startIcon={<FaHeart />} sx={{ color: 'inherit' }}>
                 Wishlist
               </Button>
+
+              <SearchBar /> {/* ✅ Search bar with dropdown suggestions */}
 
               {isAuthenticated ? (
                 <>
@@ -143,23 +131,6 @@ const Navbar = () => {
                   <Button component={Link} to="/signup" sx={{ color: 'inherit' }}>Signup</Button>
                 </>
               )}
-
-              <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', marginLeft: '20px' }}>
-                <InputBase
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search..."
-                  sx={{
-                    border: '1px solid #ccc',
-                    padding: '5px 10px',
-                    borderRadius: '4px',
-                    width: '200px',
-                  }}
-                />
-                <IconButton type="submit" sx={{ padding: '10px' }}>
-                  <FaSearch />
-                </IconButton>
-              </form>
             </Box>
           )}
         </Container>
