@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const [sessionId, setSessionId] = useState(localStorage.getItem('sessionId'));
+
   // Save to localStorage on login
   const login = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
@@ -20,15 +22,30 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
-  // Clear session on logout
-  const logout = () => {
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
-    setUser(null);
-  };
+    // Set sessionId for guest users
+    const setGuestSession = () => {
+      const newSessionId = `session_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('sessionId', newSessionId);
+      setSessionId(newSessionId);
+    };
+  
+    // Clear session on logout
+    const logout = () => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('sessionId');
+      setIsAuthenticated(false);
+      setUser(null);
+      setSessionId(null);
+    };
+
+    useEffect(() => {
+      if (!sessionId) {
+        setGuestSession();
+      }
+    }, [sessionId]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, sessionId ,login, logout }}>
       {children}
     </AuthContext.Provider>
   );

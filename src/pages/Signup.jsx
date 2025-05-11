@@ -16,7 +16,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const userData = await registerUser(name, email, password);
-      await login(userData.email, password);
+      await login(userData);
       navigate('/profile');
     } catch (error) {
       console.error('Signup failed:', error.message);

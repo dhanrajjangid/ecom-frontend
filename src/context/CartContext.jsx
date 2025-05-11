@@ -1,58 +1,85 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
+import { getCart, removeItemFromCart, saveCart, updateQuantityInCart } from '../services/cartService';
 
-// Create the Cart context
 const CartContext = createContext();
 
-// Custom hook to use the Cart context
 export const useCart = () => {
   return useContext(CartContext);
 };
 
-// CartContext provider component
 export const CartProvider = ({ children }) => {
+  const { user, sessionId } = useAuth();
   const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch cart items from localStorage (if any)
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(savedCart);
-  }, []);
-
-  // Save cart items to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Add item to cart
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id);
-    if (existingItem) {
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
-      );
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+  const fetchCart = async () => {
+    setIsLoading(true);
+    try {
+      let url = '';
+      if (user) {
+        url = `userId=${user._id}`;
+      } else if (sessionId) {
+        url = `sessionId=${sessionId}`;
+      }
+      const response = await getCart(url);
+      setCartItems(response.items || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Remove item from cart
-  const removeFromCart = (productId) => {
-    setCartItems(cartItems.filter((item) => item.id !== productId));
+  const saveToBackend = async (productId, quantity) => {
+    const data = { userId: user ? user._id : null, sessionId, productId, quantity }
+    try {
+      await saveCart(data);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
-  // Update item quantity in the cart
-  const updateQuantity = (productId, quantity) => {
+  const addToCart = async (product) => {
+    const existingItem = cartItems.find((item) => item._id === product._id);
+    if (existingItem) {
+      setCartItems(
+        cartItems.map((item) =>
+          item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+      await saveToBackend(product._id, existingItem.quantity + 1);
+    } else {
+      setCartItems([...cartItems, { _id: product.id, quantity: 1 }]);
+      await saveToBackend(product._id, 1);
+    }
+  };
+
+  const removeFromCart = async (productId) => {
+    setCartItems(cartItems.filter((item) => item._id !== productId));
+    const data = { userId: user ? user._id : null, sessionId, productId }
+    await removeItemFromCart(data);
+  };
+
+  const updateQuantity = async (productId, quantity) => {
     setCartItems(
       cartItems.map((item) =>
-        item.id === productId ? { ...item, quantity: quantity } : item
+        item._id === productId ? { ...item, quantity: quantity } : item
       )
     );
+    const data = { userId: user ? user._id : null, sessionId, productId, quantity }
+    await updateQuantityInCart(data);
   };
 
+   // Fetch cart items on mount for both guest and registered users
+   useEffect(() => {
+    fetchCart();
+  }, [user, sessionId]);
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, isLoading, error }}>
       {children}
     </CartContext.Provider>
   );

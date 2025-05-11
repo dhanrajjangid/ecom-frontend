@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 import { BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { FaShoppingCart, FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
-import { fetchProductById } from '../services/productService'; // Assuming you have an API service
+import { fetchProductById } from '../services/productService';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const fetchedProduct = await fetchProductById(id); // Fetch product details by id
+        const fetchedProduct = await fetchProductById(id); 
         setProduct(fetchedProduct);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -32,17 +32,17 @@ const ProductDetail = () => {
   };
 
   const handleAddToWishlist = () => {
-    // You can implement wishlist logic here
+    // Implement wishlist logic here
   };
 
   if (!product) {
-    return <Typography variant="h6">Loading product details...</Typography>; // Show loading if data is not yet available
+    return <Typography variant="h6">Loading product details...</Typography>;
   }
 
   return (
     <Box maxWidth="lg" sx={{ py: 4 }}>
       <Grid container spacing={4}>
-        <Grid size={{xs: 12,  md:6}} sx={{ height: { xs: '280px', md: '500px' } }}>
+        <Grid size={{xs: 12, md: 6}} sx={{ height: { xs: '280px', md: '500px' } }}>
           <Box sx={{ height: '100%', width: '100%' }}>
             <Swiper spaceBetween={10} loop slidesPerView={1} style={{ height: '100%', width: '100%' }}>
               {product?.images?.map((img, index) => (
@@ -63,7 +63,7 @@ const ProductDetail = () => {
           </Box>
         </Grid>
 
-        <Grid size={{xs: 12,  md:6}} sx={{
+        <Grid size={{xs: 12, md: 6}} sx={{
           minHeight: { md: '500px' },
           backgroundColor: '#fafafa',
           borderRadius: '8px',
@@ -162,7 +162,7 @@ const ProductDetail = () => {
         </Typography>
         <Grid container spacing={4}>
           {/* {product?.relatedProducts && [1,2].map((relatedProduct) => (
-            <Grid item xs={12} sm={6} md={4} key={relatedProduct.id}>
+            <Grid size={{xs: 12, sm: 6, md: 4}} key={relatedProduct.id}>
               <ProductCard product={relatedProduct} />
             </Grid>
           ))} */}
