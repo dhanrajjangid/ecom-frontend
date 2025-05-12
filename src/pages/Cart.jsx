@@ -8,7 +8,7 @@ const Cart = () => {
 
   // Handle quantity change
   const handleQuantityChange = (productId, newQuantity) => {
-    if (newQuantity >= 1) {
+    if (newQuantity >= 0) {
       updateQuantity(productId, newQuantity);
     }
   };
@@ -87,7 +87,7 @@ const Cart = () => {
           <Button
             variant="outlined"
             size="small"
-            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+            onClick={() => handleQuantityChange(item.productId?._id, item.quantity - 1)}
             sx={{ minWidth: '30px', fontSize: '16px' }}
           >
             -
@@ -98,7 +98,7 @@ const Cart = () => {
           <Button
             variant="outlined"
             size="small"
-            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+            onClick={() => handleQuantityChange(item.productId?._id, item.quantity + 1)}
             sx={{ minWidth: '30px', fontSize: '16px' }}
           >
             +

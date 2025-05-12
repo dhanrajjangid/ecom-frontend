@@ -61,16 +61,22 @@ export const CartProvider = ({ children }) => {
     setCartItems(cartItems.filter((item) => item._id !== productId));
     const data = { userId: user ? user._id : null, sessionId, productId }
     await removeItemFromCart(data);
+    await fetchCart()
   };
 
   const updateQuantity = async (productId, quantity) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item._id === productId ? { ...item, quantity: quantity } : item
-      )
-    );
-    const data = { userId: user ? user._id : null, sessionId, productId, quantity }
-    await updateQuantityInCart(data);
+    if(quantity === 0){
+      removeFromCart(productId)
+    }else if (quantity > 0){
+        setCartItems(
+          cartItems.map((item) =>
+            item._id === productId ? { ...item, quantity: quantity } : item
+        )
+      );
+      const data = { userId: user ? user._id : null, sessionId, productId, quantity }
+      await updateQuantityInCart(data);
+      await fetchCart()
+    }
   };
 
    // Fetch cart items on mount for both guest and registered users
