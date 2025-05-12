@@ -2,18 +2,18 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Box, Button, Typography, Grid, IconButton, Divider, Paper, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { FaTrash, FaShippingFast } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
+  const navigate = useNavigate()
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
-  // Handle quantity change
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity >= 0) {
       updateQuantity(productId, newQuantity);
     }
   };
 
-  // Calculate the total price
   const calculateTotalPrice = () => {
     return cartItems.reduce((acc, item) => acc + item.productId?.salePrice * item.quantity, 0);
   };
@@ -37,89 +37,89 @@ const Cart = () => {
             </Box>
           ) : (
             <>
-             {cartItems.map((item) => (
-  <Paper
-    key={item.id}
-    sx={{
-      padding: 2,
-      borderRadius: 2,
-      boxShadow: 2,
-      marginBottom: 2,
-    }}
-  >
-    <Grid container spacing={2} alignItems="center">
-      {/* Image */}
-      <Grid size={{ xs: 12, md: 2 }}>
-        <Box
-          component="img"
-          src={item.productId?.thumbnail}
-          alt={item.productId?.name}
-          sx={{
-            width: '100%',
-            height: 100,
-            objectFit: 'cover',
-            borderRadius: 1,
-          }}
-        />
-      </Grid>
+              {cartItems.map((item) => (
+                <Paper
+                  key={item.id}
+                  sx={{
+                    padding: 2,
+                    borderRadius: 2,
+                    boxShadow: 2,
+                    marginBottom: 2,
+                  }}
+                >
+                  <Grid container spacing={2} alignItems="center">
+                    {/* Image */}
+                    <Grid size={{ xs: 12, md: 2 }}>
+                      <Box
+                        component="img"
+                        src={item.productId?.thumbnail}
+                        alt={item.productId?.name}
+                        sx={{
+                          width: '100%',
+                          height: 100,
+                          objectFit: 'cover',
+                          borderRadius: 1,
+                        }}
+                      />
+                    </Grid>
 
-      {/* Product Info */}
-      <Grid size={{ xs: 12, md: 4 }}>
-        <Typography variant="h6" fontWeight="bold">
-          {item.productId?.name}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          Price: ₹{item.productId?.salePrice}
-        </Typography>
-      </Grid>
+                    {/* Product Info */}
+                    <Grid size={{ xs: 12, md: 4 }}>
+                      <Typography variant="h6" fontWeight="bold">
+                        {item.productId?.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Price: ₹{item.productId?.salePrice}
+                      </Typography>
+                    </Grid>
 
-      {/* Quantity & Actions */}
-      <Grid size={{ xs: 12, md: 6 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 1,
-            justifyContent: { xs: 'flex-start', md: 'flex-end' },
-          }}
-        >
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => handleQuantityChange(item.productId?._id, item.quantity - 1)}
-            sx={{ minWidth: '30px', fontSize: '16px' }}
-          >
-            -
-          </Button>
-          <Typography variant="body1" fontWeight="bold">
-            {item.quantity}
-          </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => handleQuantityChange(item.productId?._id, item.quantity + 1)}
-            sx={{ minWidth: '30px', fontSize: '16px' }}
-          >
-            +
-          </Button>
-          <Typography variant="body2" fontWeight="bold">
-            Total: ₹{item.quantity * Number(item.productId?.salePrice)}
-          </Typography>
-          <IconButton color="error" onClick={() => removeFromCart(item.id)}>
-            <FaTrash />
-          </IconButton>
-        </Box>
-      </Grid>
-    </Grid>
-  </Paper>
-))}
+                    {/* Quantity & Actions */}
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          gap: 1,
+                          justifyContent: { xs: 'flex-start', md: 'flex-end' },
+                        }}
+                      >
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => handleQuantityChange(item.productId?._id, item.quantity - 1)}
+                          sx={{ minWidth: '30px', fontSize: '16px' }}
+                        >
+                          -
+                        </Button>
+                        <Typography variant="body1" fontWeight="bold">
+                          {item.quantity}
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => handleQuantityChange(item.productId?._id, item.quantity + 1)}
+                          sx={{ minWidth: '30px', fontSize: '16px' }}
+                        >
+                          +
+                        </Button>
+                        <Typography variant="body2" fontWeight="bold">
+                          Total: ₹{item.quantity * Number(item.productId?.salePrice)}
+                        </Typography>
+                        <IconButton color="error" onClick={() => removeFromCart(item.id)}>
+                          <FaTrash />
+                        </IconButton>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              ))}
 
             </>
           )}
         </Grid>
 
-        <Grid size={{xs:12, md:4}}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Paper sx={{ padding: 3, borderRadius: 2, boxShadow: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
               Cart Total
@@ -143,7 +143,7 @@ const Cart = () => {
               color="primary"
               fullWidth
               sx={{ marginTop: 2, padding: '10px 20px', fontWeight: 'bold' }}
-              onClick={() => alert("Proceeding to checkout...")}
+              onClick={() => navigate("/checkout")}
             >
               Proceed to Checkout
             </Button>

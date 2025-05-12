@@ -15,3 +15,7 @@ export const removeItemFromCart = async (productId) => {
 export const updateQuantityInCart = async (productId) => {
   return await post('cart/add', productId);
 };
+
+export const getOrderDetails = async (userId) => {
+  return await post('order/details', userId);
+};
