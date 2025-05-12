@@ -23,3 +23,7 @@ export const getOrderDetails = async (userId) => {
 export const createPaymentOrder = async ({ userId }) => {
   return await post('payment/create-order', { userId });
 };
+
+export const checkPaymentStatus = async ( orderId ) => {
+  return await get(`payment/status/${orderId}`);
+};

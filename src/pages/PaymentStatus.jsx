@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, Link } from 'react-router-dom';
 import {
   CircularProgress,
   Box,
@@ -8,26 +7,23 @@ import {
   Button,
   Stack,
 } from '@mui/material';
-import { FaCheckCircle, FaTimesCircle, FaHome, FaClipboardList } from 'react-icons/fa';
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaHome,
+  FaClipboardList,
+} from 'react-icons/fa';
+import { checkPaymentStatus } from '../services/cartService';
 
 const PaymentStatus = () => {
-  const [searchParams] = useSearchParams();
+  const { id: orderId } = useParams();
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
-    const verifyPayment = async () => {
+    const fetchPaymentStatus = async () => {
       try {
-        const paymentId = searchParams.get('payment_id');
-        const orderId = searchParams.get('order_id');
-        const signature = searchParams.get('signature');
-
-        const res = await axios.post('/api/payment/verify', {
-          razorpay_payment_id: paymentId,
-          razorpay_order_id: orderId,
-          razorpay_signature: signature,
-        });
-
-        if (res.data.success) {
+        const res = await checkPaymentStatus(orderId);
+        if (res.success && res.status === 'paid') {
           setStatus('success');
         } else {
           setStatus('failure');
@@ -37,15 +33,16 @@ const PaymentStatus = () => {
       }
     };
 
-    verifyPayment();
-  }, [searchParams]);
+    if (orderId) fetchPaymentStatus();
+    else setStatus('failure');
+  }, [orderId]);
 
   return (
     <Box textAlign="center" mt={10}>
       {status === 'loading' && (
         <>
           <CircularProgress color="primary" />
-          <Typography mt={2}>Verifying your payment...</Typography>
+          <Typography mt={2}>Checking payment status...</Typography>
         </>
       )}
 
@@ -85,7 +82,7 @@ const PaymentStatus = () => {
             ❌ Payment Failed
           </Typography>
           <Typography mt={1}>
-            Something went wrong. Please try again or contact support.
+            We couldn’t verify your payment. Please contact support if you’ve already paid.
           </Typography>
           <Stack direction="row" spacing={2} justifyContent="center" mt={4}>
             <Button

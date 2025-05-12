@@ -108,6 +108,7 @@ const ProfilePage = () => {
                   fullWidth
                   variant="outlined"
                   startIcon={<FaHistory />}
+                  onClick={() => navigate('/orders')}
                   sx={{
                     py: 2,
                     justifyContent: 'flex-start',

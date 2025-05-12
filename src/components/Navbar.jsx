@@ -1,3 +1,4 @@
+// pages/Navbar.jsx
 import React, { useState } from 'react';
 import {
   AppBar,
@@ -15,7 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../context/AuthContext';
-import { FaBars, FaHome, FaHeart, FaUserCircle, FaShoppingCart } from 'react-icons/fa';
+import { FaBars, FaHome, FaHeart, FaUserCircle, FaShoppingCart, FaSignInAlt, FaUserPlus, FaBox } from 'react-icons/fa';
 import { BiCategoryAlt } from 'react-icons/bi';
 import SearchBar from './SearchBar';
 
@@ -59,6 +60,11 @@ const Navbar = () => {
 
           {isMobile ? (
             <>
+              {/* Cart icon near the menu button in mobile view */}
+              <IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginRight: '10px' }}>
+                <FaShoppingCart size={22} />
+              </IconButton>
+
               <IconButton edge="end" onClick={handleDrawerToggle} sx={{ color: 'inherit' }}>
                 <FaBars size={22} />
               </IconButton>
@@ -86,17 +92,24 @@ const Navbar = () => {
                   <Button component={Link} to="/wishlist" startIcon={<FaHeart />} sx={{ color: 'inherit' }}>
                     Wishlist
                   </Button>
+                  <Button component={Link} to="/orders" startIcon={<FaBox />} sx={{ color: 'inherit' }}>
+                    Orders
+                  </Button>
                   {isAuthenticated ? (
                     <>
                       <Button component={Link} to="/profile" startIcon={<FaUserCircle />} sx={{ color: 'inherit' }}>
                         Profile
                       </Button>
-                      <Button component={Link} to="/orders" sx={{ color: 'inherit' }}>Orders</Button>
+                      <Button onClick={logout} sx={{ color: 'inherit' }}>Logout</Button>
                     </>
                   ) : (
                     <>
-                      <Button component={Link} to="/login" sx={{ color: 'inherit' }}>Login</Button>
-                      <Button component={Link} to="/signup" sx={{ color: 'inherit' }}>Signup</Button>
+                      <Button component={Link} to="/login" startIcon={<FaSignInAlt />} sx={{ color: 'inherit' }}>
+                        Login
+                      </Button>
+                      <Button component={Link} to="/signup" startIcon={<FaUserPlus />} sx={{ color: 'inherit' }}>
+                        Signup
+                      </Button>
                     </>
                   )}
                 </Box>
@@ -127,8 +140,12 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Button component={Link} to="/login" sx={{ color: 'inherit' }}>Login</Button>
-                  <Button component={Link} to="/signup" sx={{ color: 'inherit' }}>Signup</Button>
+                  <Button component={Link} to="/login" startIcon={<FaSignInAlt />} sx={{ color: 'inherit' }}>
+                    Login
+                  </Button>
+                  <Button component={Link} to="/signup" startIcon={<FaUserPlus />} sx={{ color: 'inherit' }}>
+                    Signup
+                  </Button>
                 </>
               )}
             </Box>

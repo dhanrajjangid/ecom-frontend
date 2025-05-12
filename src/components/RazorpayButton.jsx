@@ -28,7 +28,7 @@ const RazorpayButton = ({ user, amount }) => {
         description: 'Furniture Order Payment',
         image: "https://example.com/your_logo",
         order_id: order.orderId,
-        callback_url: `https://assembleone.netlify.app/payment-status${order.orderId}`,
+        callback_url: `https://assembleone.netlify.app/payment-status/${order.orderId}`,
       
         prefill: {
           name: user.name,
