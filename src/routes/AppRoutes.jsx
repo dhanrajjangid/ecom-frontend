@@ -13,6 +13,7 @@ import Signup from '../pages/Signup';
 import Profile from '../pages/Profile';
 import Orders from '../pages/Orders';
 import PrivateRoute from './PrivateRoute';
+import PaymentStatus from '../pages/PaymentStatus';
 
 function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ function AppRoutes() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment-status" element={<PaymentStatus />} />
         <Route
           path="/profile"
           element={

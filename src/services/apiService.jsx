@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:8000/api/';
-const API_URL = 'https://ecom-backend-blush.vercel.app/api/';
+const API_URL = 'http://localhost:8000/api/';
+// const API_URL = 'https://ecom-backend-blush.vercel.app/api/';
 
 
 

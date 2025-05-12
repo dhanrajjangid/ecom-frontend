@@ -19,3 +19,7 @@ export const updateQuantityInCart = async (productId) => {
 export const getOrderDetails = async (userId) => {
   return await post('order/details', userId);
 };
+
+export const createPaymentOrder = async ({ userId }) => {
+  return await post('payment/create-order', { userId });
+};

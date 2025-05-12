@@ -16,6 +16,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getOrderDetails } from '../services/cartService';
 import { getAddresses, addAddress } from '../services/addressService';
+import RazorpayButton from '../components/RazorpayButton';
 
 const initialAddressState = {
   name: '',
@@ -243,6 +244,7 @@ const Checkout = () => {
             <Typography variant="h6">Total</Typography>
             <Typography variant="h6">₹{orderDetails.total}</Typography>
           </Box>
+          <RazorpayButton user={user} amount={orderDetails.total} />
         </Paper>
       ) : (
         <Typography>No cart data available.</Typography>
