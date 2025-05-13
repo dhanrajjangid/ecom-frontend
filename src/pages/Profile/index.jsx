@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +7,7 @@ import AddressForm from './AddressForm';
 import EditProfile from './EditProfile';
 import ProfileCard from './ProfileCard';
 import AddressList from './AddressList';
+import { addNewAddress, getAddressList } from '../../services/profileService';
 
 const initialAddress = {
     name: '',
@@ -23,7 +24,7 @@ const initialAddress = {
 };
 
 const ProfilePage = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
@@ -74,20 +75,6 @@ const ProfilePage = () => {
         setOpenProfileDialog(false);
     };
 
-    const handleAddressSubmit = () => {
-        if (editingAddressIndex !== null) {
-            const updatedList = [...addressList];
-            updatedList[editingAddressIndex] = currentAddress;
-            setAddressList(updatedList);
-        } else {
-            if (addressList.length === 0) {
-                setCurrentAddress({ ...currentAddress, isPrimary: true });
-            }
-            setAddressList([...addressList, currentAddress]);
-        }
-        handleAddressDialogClose();
-    };
-
     const handleAddressDelete = (index) => {
         const newList = [...addressList];
         newList.splice(index, 1);
@@ -98,6 +85,43 @@ const ProfilePage = () => {
         logout();
         navigate('/login');
     };
+
+    const handleAddressSubmit = async () => {
+        try {
+          if (editingAddressIndex !== null) {
+            const updatedList = [...addressList];
+            updatedList[editingAddressIndex] = currentAddress;
+            setAddressList(updatedList);
+          } else {
+            const newAddress = {
+              ...currentAddress,
+              userId: user._id,
+              isPrimary: addressList.length === 0 ? true : false,
+            };
+            const res = await addNewAddress(newAddress);
+            setAddressList((prev) => [...prev, res]);
+          }
+          handleAddressDialogClose();
+        } catch (error) {
+          console.error('Error adding address:', error);
+        }
+      };
+      
+
+    const fetchAddresses = async () => {
+        try {
+          const res = await getAddressList(user._id);
+          setAddressList(res);
+        } catch (error) {
+          console.error('Failed to fetch addresses', error);
+        }
+    };
+
+    useEffect(() => {
+        if (!user?._id) return;
+        fetchAddresses();
+      }, [user]);
+      
 
     return (
         <Box sx={{ mt: 5 }}>

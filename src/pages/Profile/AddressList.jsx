@@ -19,12 +19,12 @@ const AddressList = ({
         Saved Addresses
       </Typography>
 
-      {addressList.length === 0 ? (
+      {addressList?.length === 0 ? (
         <Typography color="text.secondary" mb={2}>
           No addresses added.
         </Typography>
       ) : (
-        addressList.map((addr, index) => (
+        addressList?.map((addr, index) => (
           <Box
             key={index}
             sx={{
