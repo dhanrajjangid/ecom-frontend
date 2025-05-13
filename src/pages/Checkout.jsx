@@ -4,12 +4,11 @@ import {
   Typography,
   Paper,
   Divider,
-  TextField,
   Button,
-  MenuItem,
-  Select,
-  InputLabel,
   FormControl,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from '@mui/material';
 
 import { useCart } from '../context/CartContext';
@@ -17,6 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { getOrderDetails } from '../services/cartService';
 import { getAddresses, addAddress } from '../services/addressService';
 import RazorpayButton from '../components/RazorpayButton';
+import AddressForm from './Profile/AddressForm';
 
 const initialAddressState = {
   name: '',
@@ -38,6 +38,8 @@ const Checkout = () => {
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [useNewAddress, setUseNewAddress] = useState(false);
   const [newAddress, setNewAddress] = useState(initialAddressState);
+  const [currentAddress, setCurrentAddress] = useState(initialAddressState);
+  const [openAddressDialog, setOpenAddressDialog] = useState(false);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -62,7 +64,16 @@ const Checkout = () => {
     fetchInitialData();
   }, [cartItems, user]);
 
-  const handleAddAddress = async () => {
+  const handleAddressDialogOpen = () => {
+    setCurrentAddress(initialAddressState);
+    setOpenAddressDialog(true);
+  };
+
+  const handleAddressDialogClose = () => {
+    setOpenAddressDialog(false);
+  };
+
+  const handleAddressSubmit = async () => {
     try {
       const saved = await addAddress({ ...newAddress, userId: user._id });
       setAddresses((prev) => [...prev, saved]);
@@ -72,10 +83,6 @@ const Checkout = () => {
     } catch (error) {
       console.error('Error adding address:', error);
     }
-  };
-
-  const handleChange = (e) => {
-    setNewAddress({ ...newAddress, [e.target.name]: e.target.value });
   };
 
   return (
@@ -91,109 +98,36 @@ const Checkout = () => {
         </Typography>
 
         {!useNewAddress && (
-          <>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Select Address</InputLabel>
-              <Select
+          <Box display={"flex"} flexDirection={"column"} alignItems={'flex-start'}>
+            <FormControl component="fieldset" sx={{ mb: 2 }}>
+              {/* <FormLabel component="legend">Select Address</FormLabel> */}
+              <RadioGroup
                 value={selectedAddressId}
-                label="Select Address"
                 onChange={(e) => setSelectedAddressId(e.target.value)}
               >
                 {addresses.map((addr) => (
-                  <MenuItem key={addr._id} value={addr._id}>
-                    {addr.name}, {addr.addressLine1}, {addr.city}, {addr.state} - {addr.postalCode}
-                  </MenuItem>
+                  <FormControlLabel
+                    key={addr._id}
+                    value={addr._id}
+                    control={<Radio />}
+                    label={`${addr.name}, ${addr.addressLine1}, ${addr.city}, ${addr.state} - ${addr.postalCode}`}
+                  />
                 ))}
-              </Select>
+              </RadioGroup>
             </FormControl>
-
-            <Button onClick={() => setUseNewAddress(true)}>Use a new address</Button>
-          </>
-        )}
-
-        {useNewAddress && (
-          <Box>
-            <TextField
-              label="Full Name"
-              name="name"
-              value={newAddress.name}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Mobile"
-              name="mobile"
-              value={newAddress.mobile}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Address Line 1"
-              name="addressLine1"
-              value={newAddress.addressLine1}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-            <TextField
-              label="Address Line 2"
-              name="addressLine2"
-              value={newAddress.addressLine2}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="City"
-              name="city"
-              value={newAddress.city}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="State"
-              name="state"
-              value={newAddress.state}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Postal Code"
-              name="postalCode"
-              value={newAddress.postalCode}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-
-            <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-              <InputLabel>Address Type</InputLabel>
-              <Select
-                value={newAddress.addressType}
-                name="addressType"
-                onChange={handleChange}
-              >
-                <MenuItem value="Home">Home</MenuItem>
-                <MenuItem value="Office">Office</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-            </FormControl>
-
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-              <Button variant="contained" onClick={handleAddAddress}>
-                Save Address
-              </Button>
-              <Button variant="outlined" onClick={() => setUseNewAddress(false)}>
-                Cancel
-              </Button>
-            </Box>
+            <Button onClick={handleAddressDialogOpen} >Use a new address</Button>
           </Box>
         )}
+
+
+        <AddressForm
+          open={openAddressDialog}
+          handleAddressDialogClose={handleAddressDialogClose}
+          editingAddressIndex={null}
+          currentAddress={currentAddress}
+          setCurrentAddress={setCurrentAddress}
+          handleAddressSubmit={handleAddressSubmit}
+        />
       </Paper>
 
       {/* Order Summary */}
@@ -244,7 +178,7 @@ const Checkout = () => {
             <Typography variant="h6">Total</Typography>
             <Typography variant="h6">₹{orderDetails.total}</Typography>
           </Box>
-          <RazorpayButton user={user} amount={orderDetails.total} />
+          <RazorpayButton user={user} addressId={selectedAddressId} amount={orderDetails.total} />
         </Paper>
       ) : (
         <Typography>No cart data available.</Typography>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@mui/material';
 import { createPaymentOrder } from '../services/cartService';
 
-const RazorpayButton = ({ user, amount }) => {
+const RazorpayButton = ({ user, amount, addressId }) => {
 
   const loadRazorpayScript = () =>
     new Promise((resolve) => {
@@ -18,7 +18,7 @@ const RazorpayButton = ({ user, amount }) => {
     if (!res) return alert('Razorpay SDK failed to load.');
 
     try {
-      const order = await createPaymentOrder({ userId: user._id });
+      const order = await createPaymentOrder({ userId: user._id, addressId });
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,

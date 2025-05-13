@@ -20,8 +20,8 @@ export const getOrderDetails = async (userId) => {
   return await post('order/details', userId);
 };
 
-export const createPaymentOrder = async ({ userId }) => {
-  return await post('payment/create-order', { userId });
+export const createPaymentOrder = async ({ userId, addressId }) => {
+  return await post('payment/create-order', { userId, addressId });
 };
 
 export const checkPaymentStatus = async ( orderId ) => {
