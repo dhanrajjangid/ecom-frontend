@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
-  Typography,
+  
   Button,
   Container,
   IconButton,
@@ -19,6 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { FaBars, FaHome, FaHeart, FaUserCircle, FaShoppingCart, FaSignInAlt, FaUserPlus, FaBox } from 'react-icons/fa';
 import { BiCategoryAlt } from 'react-icons/bi';
 import SearchBar from './SearchBar';
+import LogoImg from '../assets/logo.jpeg'
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -48,26 +49,31 @@ const Navbar = () => {
       }}
     >
       <Toolbar>
-        <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{ textDecoration: 'none', color: 'inherit', fontWeight: 600 }}
-          >
-            Elmora
-          </Typography>
+        <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: {xs: 'flex-end', md: 'center'} }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'flex-end', textDecoration: 'none' }}>
+      <Box
+        component="img"
+        src={LogoImg}
+        alt="Elmora Logo"
+        sx={{
+          maxHeight: isMobile ? 40 : 40, // Adjust height for mobile and desktop
+          width: 'auto',
+          objectFit: 'contain',
+        }}
+      />
+    </Link>
 
           {isMobile ? (
             <>
               {/* Cart icon near the menu button in mobile view */}
-              <IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginRight: '10px' }}>
+              <Box><IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginRight: '10px' }}>
                 <FaShoppingCart size={22} />
               </IconButton>
 
               <IconButton edge="end" onClick={handleDrawerToggle} sx={{ color: 'inherit' }}>
                 <FaBars size={22} />
               </IconButton>
+              </Box>
               <Drawer
                 anchor="right"
                 open={drawerOpen}
