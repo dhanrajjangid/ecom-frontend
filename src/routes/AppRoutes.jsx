@@ -15,6 +15,10 @@ import Orders from '../pages/Orders';
 import OrderDetails from '../pages/orderDetails';
 import PrivateRoute from './PrivateRoute';
 import PaymentStatus from '../pages/PaymentStatus';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import TermsAndConditions from '../pages/TermsAndConditions';
+import ShippingAndReturns from '../pages/ShippingAndReturns';
+import ContactUs from '../pages/ContactUs';
 
 function AppRoutes() {
   return (
@@ -28,6 +32,10 @@ function AppRoutes() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment-status/:id" element={<PaymentStatus />} />
         <Route path="/order/:id" element={<OrderDetails />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/return-shipping" element={<ShippingAndReturns />} />
+        <Route path="/contact-us" element={<ContactUs />} />
         
         <Route
           path="/profile"

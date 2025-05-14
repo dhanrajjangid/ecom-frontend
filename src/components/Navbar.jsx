@@ -55,7 +55,7 @@ const Navbar = () => {
             to="/"
             sx={{ textDecoration: 'none', color: 'inherit', fontWeight: 600 }}
           >
-            Assemble One
+            Elmora
           </Typography>
 
           {isMobile ? (
