@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
-  
+
   Button,
   Container,
   IconButton,
@@ -49,30 +49,34 @@ const Navbar = () => {
       }}
     >
       <Toolbar>
-        <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: {xs: 'flex-end', md: 'center'} }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'flex-end', textDecoration: 'none' }}>
-      <Box
-        component="img"
-        src={LogoImg}
-        alt="Elmora Logo"
-        sx={{
-          maxHeight: isMobile ? 40 : 40, // Adjust height for mobile and desktop
-          width: 'auto',
-          objectFit: 'contain',
-        }}
-      />
-    </Link>
+        <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-end', md: 'center' } }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'flex-end', textDecoration: 'none' }}>
+            <Box
+              component="img"
+              src={LogoImg}
+              alt="Elmora Logo"
+              sx={{
+                maxHeight: isMobile ? 40 : 40, // Adjust height for mobile and desktop
+                width: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+          </Link>
 
           {isMobile ? (
             <>
               {/* Cart icon near the menu button in mobile view */}
-              <Box><IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginRight: '10px' }}>
-                <FaShoppingCart size={22} />
-              </IconButton>
+              <Box>
+              <IconButton component={Link} to="/wishlist" sx={{ color: 'inherit', marginRight: '10px' }}>
+                  <FaHeart size={22} />
+                </IconButton>
+                <IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginRight: '10px' }}>
+                  <FaShoppingCart size={22} />
+                </IconButton>
 
-              <IconButton edge="end" onClick={handleDrawerToggle} sx={{ color: 'inherit' }}>
-                <FaBars size={22} />
-              </IconButton>
+                <IconButton edge="end" onClick={handleDrawerToggle} sx={{ color: 'inherit' }}>
+                  <FaBars size={22} />
+                </IconButton>
               </Box>
               <Drawer
                 anchor="right"
@@ -129,16 +133,15 @@ const Navbar = () => {
               <Button component={Link} to="/categories" startIcon={<BiCategoryAlt />} sx={{ color: 'inherit' }}>
                 Categories
               </Button>
-              <Button component={Link} to="/wishlist" startIcon={<FaHeart />} sx={{ color: 'inherit' }}>
-                Wishlist
-              </Button>
-
               <SearchBar /> {/* ✅ Search bar with dropdown suggestions */}
 
               {isAuthenticated ? (
                 <>
                   <IconButton component={Link} to="/profile" sx={{ color: 'inherit' }}>
                     <FaUserCircle size={22} />
+                  </IconButton>
+                  <IconButton component={Link} to="/wishlist" sx={{ color: 'inherit', marginLeft: '15px' }}>
+                    <FaHeart size={22} />
                   </IconButton>
                   <IconButton component={Link} to="/cart" sx={{ color: 'inherit', marginLeft: '15px' }}>
                     <FaShoppingCart size={22} />
