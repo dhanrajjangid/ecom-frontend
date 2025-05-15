@@ -19,6 +19,7 @@ import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsAndConditions from '../pages/TermsAndConditions';
 import ShippingAndReturns from '../pages/ShippingAndReturns';
 import ContactUs from '../pages/ContactUs';
+import ProductList from '../pages/ProductList';
 
 function AppRoutes() {
   return (
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/return-shipping" element={<ShippingAndReturns />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/browse-products" element={<ProductList />} />
         
         <Route
           path="/profile"

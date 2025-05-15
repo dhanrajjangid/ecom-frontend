@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useNavigate } from 'react-router-dom';
 
 const slides = [
   {
@@ -19,6 +20,7 @@ const slides = [
 ];
 
 const HeroSection = () => {
+  const navigate = useNavigate()
   return (
     <Box>
       {/* 🎉 Running Banner */}
@@ -114,9 +116,8 @@ const HeroSection = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    onClick={()=> navigate('/browse-products')}
                     sx={{
-                      backgroundColor: '#ffffff',
-                      color: '#000',
                       fontWeight: 'bold',
                       textTransform: 'none',
                       '&:hover': {
